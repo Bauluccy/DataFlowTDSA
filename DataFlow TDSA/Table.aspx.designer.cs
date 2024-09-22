@@ -24,6 +24,15 @@ namespace DataFlow_TDSA
         protected global::System.Web.UI.UpdatePanel updatePanel;
 
         /// <summary>
+        /// Controle toggleAtivos.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Para modificar, mova a declaração de campo do arquivo de designer a um arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox toggleAtivos;
+
+        /// <summary>
         /// Controle txbNome.
         /// </summary>
         /// <remarks>

@@ -13,7 +13,7 @@
      <li class="nav-item">
          <a class="nav-link" href="../Table.aspx">
              <i class="fas fa-fw fa-table"></i>
-             <span>Tables</span></a>
+             <span>Tabela</span></a>
      </li>
 
      <hr class="sidebar-divider d-none d-md-block">

@@ -15,7 +15,16 @@ namespace DataFlow_TDSA
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            CarregaClientes();
+            if (!IsPostBack)
+            {
+                CarregaClientes();
+
+            }
+            else
+            {
+                CarregaClientes();
+            }
+                
         }
 
         protected void InserirCliente_Click(object sender, EventArgs e)
@@ -31,16 +40,16 @@ namespace DataFlow_TDSA
 
         protected void DeletarCliente_Click(object sender, EventArgs e)
         {
-            string valor = hiddenID.Value;
+            string id = hiddenID.Value;
             Cliente cliente = new Cliente();
-            cliente.DeletarCliente(int.Parse(valor));
+            cliente.DeletarCliente(int.Parse(id));
             CarregaClientes();
         }
 
         protected void EditarCliente_Click(object sender, EventArgs e)
         {
             Cliente cliente = new Cliente();
-            bool ativo = bool.Parse(hiddenAtivo.Value) == false? false : true;
+            bool ativo = bool.Parse(hiddenAtivo.Value) == false ? false : true;
             cliente.EditarCliente(int.Parse(hiddenID.Value), hiddenNome.Value, DateTime.Parse(hiddenData.Value), ativo);
             CarregaClientes();
         }
@@ -53,121 +62,112 @@ namespace DataFlow_TDSA
 
             foreach (var cliente in listaClientes)
             {
-                HtmlGenericControl tr = new HtmlGenericControl("tr");
-                for (int i = 0; i < 5; i++)
+                if (cliente.CLI_ATIVO || (toggleAtivos.Checked && !cliente.CLI_ATIVO))
                 {
-                    HtmlGenericControl td = new HtmlGenericControl("td");
-
-                    switch (i)
+                    HtmlGenericControl tr = new HtmlGenericControl("tr");
+                    for (int i = 0; i < 5; i++)
                     {
-                        case 0:
-                            {
+                        HtmlGenericControl td = new HtmlGenericControl("td");
+
+                        switch (i)
+                        {
+                            case 0:
                                 td.ID = $"Cliente{cliente.CLI_ID}";
                                 td.InnerText = cliente.CLI_ID.ToString();
                                 break;
-                            }
-                        case 1:
-                            {
+
+                            case 1:
                                 td.InnerText = cliente.CLI_NOME;
                                 break;
-                            }
-                        case 2:
-                            {
+
+                            case 2:
                                 td.InnerText = cliente.CLI_DATANASCIMENTO.ToString("yyyy-MM-dd");
                                 break;
-                            }
-                        case 3:
-                            {
+
+                            case 3:
                                 HtmlGenericControl div = new HtmlGenericControl("div");
                                 div.Attributes["class"] = "form-check form-switch d-flex justify-content-center";
 
                                 HtmlInputCheckBox check = new HtmlInputCheckBox();
                                 check.Attributes["class"] = "form-check-input";
                                 check.Attributes["disabled"] = "true";
-
-                                if (cliente.CLI_ATIVO)
-                                {
-                                    check.Attributes["checked"] = "checked";
-                                }
+                                check.Attributes["checked"] = cliente.CLI_ATIVO ? "checked" : null;
 
                                 div.Controls.Add(check);
                                 td.Controls.Add(div);
-
                                 break;
-                            }
 
-                        case 4:
-                            {
-                                LinkButton btnEditar = new LinkButton();
-                                btnEditar.ClientIDMode = ClientIDMode.Static;
-                                btnEditar.Attributes["AutoPostBack"] = "true";
-                                btnEditar.ID = $"btnEditar{cliente.CLI_ID}";
-                                //anchorEditar.Click += EditarCliente_Click;
-                                btnEditar.Attributes["onclick"] = "event.preventDefault();"; 
-                                btnEditar.Attributes["type"] = "submit";
-                                btnEditar.Attributes["class"] = "btn btn-warning btn-circle btnSelectRow btnEditar";
+                            case 4:
+                                HtmlGenericControl divBtns = new HtmlGenericControl("div");
+                                divBtns.Attributes["class"] = "col-3 d-flex justify-content-around";
 
-                                HtmlGenericControl iconEditar = new HtmlGenericControl("i");
-                                iconEditar.Attributes["class"] = "fas fa-edit";
-                                
-                                
-                                //Criar metodo para adicionar um botão e a class dele
-                                LinkButton btnDeletar = new LinkButton();
-                                btnDeletar.ClientIDMode = ClientIDMode.Static;
-                                btnDeletar.Attributes["AutoPostBack"] = "true";
-                                btnDeletar.ID = $"btnDeletar{cliente.CLI_ID}";
-                                btnDeletar.Click += DeletarCliente_Click;
-                                btnDeletar.Attributes["type"] = "submit";
-                                btnDeletar.Attributes["class"] = "btn btn-danger btn-circle btnSelectRow btnDeletar";
-
-                                HtmlGenericControl iconDeletar = new HtmlGenericControl("i");
-                                iconDeletar.Attributes["class"] = "fas fa-trash";
-
-                                LinkButton btnConfirmar = new LinkButton();
-                                btnConfirmar.ClientIDMode = ClientIDMode.Static;
-                                btnConfirmar.Attributes["AutoPostBack"] = "true";
-                                btnConfirmar.ID = $"btnConfirmar{cliente.CLI_ID}";
-                                btnConfirmar.Click += EditarCliente_Click;
-                                btnConfirmar.Attributes["type"] = "submit";
-                                btnConfirmar.Attributes["class"] = "btn btn-success btn-circle btnSelectRow btnConfirmar d-none";
-                                
-                                HtmlGenericControl iconConfirmar = new HtmlGenericControl("i");
-                                iconConfirmar.Attributes["class"] = "fas fa-save";
-
-                                LinkButton btnCancelar = new LinkButton();
-                                btnCancelar.ClientIDMode = ClientIDMode.Static;
-                                btnCancelar.Attributes["AutoPostBack"] = "true";
-                                btnCancelar.ID = $"btnCancelar{cliente.CLI_ID}";
-                                //anchorEditar.Click += EditarCliente_Click;
-                                btnCancelar.Attributes["onclick"] = "event.preventDefault();";
-                                btnCancelar.Attributes["type"] = "submit";
-                                btnCancelar.Attributes["class"] = "btn btn-danger btn-circle btnSelectRow btnCancelar d-none";
-
-                                HtmlGenericControl iconCancelar = new HtmlGenericControl("i");
-                                iconCancelar.Attributes["class"] = "fas fa-times";
-
-                                btnEditar.Controls.Add(iconEditar);
-                                btnDeletar.Controls.Add(iconDeletar);
-                                btnConfirmar.Controls.Add(iconConfirmar);
-                                btnCancelar.Controls.Add(iconCancelar);
-
-                                td.Controls.Add(btnEditar);
-                                td.Controls.Add(btnConfirmar);
-                                td.Controls.Add(btnDeletar);
-                                td.Controls.Add(btnCancelar);
-
+                                CriarBotoes(divBtns, cliente);
+                                td.Controls.Add(divBtns);
                                 break;
-                            }
+                        }
+
+                        tr.Controls.Add(td);
                     }
 
-                    tr.Controls.Add(td);
+                    tableClientes.Controls.Add(tr);
                 }
-
-                tableClientes.Controls.Add(tr);
-
-                
             }
+
             return listaClientes;
+        }
+
+        private void CriarBotoes(HtmlGenericControl divBtns, Cliente cliente)
+        {
+            LinkButton btnEditar = new LinkButton
+            {
+                ClientIDMode = ClientIDMode.Static,
+                ID = $"btnEditar{cliente.CLI_ID}",
+                Text = "Editar"
+            };
+            btnEditar.Attributes["onclick"] = "event.preventDefault();";
+            btnEditar.Attributes["class"] = "btn btn-warning btn-circle btnSelectRow btnEditar";
+            btnEditar.Controls.Add(new HtmlGenericControl("i") { Attributes = { ["class"] = "fas fa-edit" } });
+
+            LinkButton btnDeletar = new LinkButton
+            {
+                ClientIDMode = ClientIDMode.Static,
+                ID = $"btnDeletar{cliente.CLI_ID}",
+                Text = "Deletar",
+                Attributes = { ["class"] = "btn btn-danger btn-circle btnSelectRow btnDeletar" }
+            };
+            btnDeletar.Click += DeletarCliente_Click;
+            btnDeletar.Controls.Add(new HtmlGenericControl("i") { Attributes = { ["class"] = "fas fa-trash" } });
+
+            LinkButton btnConfirmar = new LinkButton
+            {
+                ClientIDMode = ClientIDMode.Static,
+                ID = $"btnConfirmar{cliente.CLI_ID}",
+                Text = "Confirmar",
+                Attributes = { ["class"] = "btn btn-success btn-circle btnSelectRow btnConfirmar d-none" }
+            };
+
+            btnConfirmar.Click += EditarCliente_Click;
+            btnConfirmar.Controls.Add(new HtmlGenericControl("i") { Attributes = { ["class"] = "fas fa-save" } });
+
+            LinkButton btnCancelar = new LinkButton
+            {
+                ClientIDMode = ClientIDMode.Static,
+                ID = $"btnCancelar{cliente.CLI_ID}",
+                Text = "Cancelar",
+                Attributes = { ["class"] = "btn btn-danger btn-circle btnSelectRow btnCancelar d-none"},
+            };
+            btnCancelar.Attributes["onclick"] = "event.preventDefault();";
+            btnCancelar.Controls.Add(new HtmlGenericControl("i") { Attributes = { ["class"] = "fas fa-times" } });
+
+            divBtns.Controls.Add(btnEditar);
+            divBtns.Controls.Add(btnConfirmar);
+            divBtns.Controls.Add(btnDeletar);
+            divBtns.Controls.Add(btnCancelar);
+        }
+
+        protected void toggleAtivos_CheckedChanged(object sender, EventArgs e)
+        {
+            CarregaClientes();
         }
     }
 }
