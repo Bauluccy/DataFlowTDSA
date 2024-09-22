@@ -38,11 +38,22 @@ $(document).ready(function () {
             $('#hiddenNome').val(nome);
             $('#hiddenData').val(data);
             $('#hiddenAtivo').val(isChecked ? 'true' : 'false');
-            
+
         }, 0);
     });
 
+    $('.btnDeletar').on('click', function () {
+        var row = $(this).closest('tr');
+
+        // Captura o ID do elemento correto
+        var id = row.find('.textID').val() || row.find('td:first').text(); // Assumindo que o ID pode estar na primeira célula
+
+        // Define o ID oculto
+        $('#hiddenID').val(id);
+    });
+
     Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function (sender, args) {
+        $('#dataTable').DataTable().destroy();
         $('#dataTable').DataTable({
             columnDefs: [
                 {
@@ -86,6 +97,16 @@ $(document).ready(function () {
                 $('#hiddenAtivo').val(isChecked ? 'true' : 'false');
 
             }, 0);
+        });
+
+        $('.btnDeletar').on('click', function () {
+            var row = $(this).closest('tr');
+
+            // Captura o ID do elemento correto
+            var id = row.find('.textID').val() || row.find('td:first').text(); // Assumindo que o ID pode estar na primeira célula
+
+            // Define o ID oculto
+            $('#hiddenID').val(id);
         });
 
         $('.btnEditar').on('click', function () {
@@ -196,20 +217,16 @@ $(document).ready(function () {
             const cell = $(this);
             switch (index) {
                 case 0:
-                    // ID
                     cell.text(cell.find('#txbEditaID').val());
                     break;
                 case 1:
-                    // Nome
                     cell.text(cell.find('#txbEditaNome').val());
                     break;
                 case 2:
-                    // Data
                     const dateValue = cell.find('#txbDateEdit').val();
                     cell.text(formatDate(dateValue));
                     break;
                 case 3:
-                    // Checkbox
                     const isChecked = cell.find('#txbAtivoEdit').is(':checked');
                     const checkboxHtml = `<div class="form-check form-switch d-flex justify-content-center"> <input type="checkbox" class="form-check-input"  ${isChecked ? 'checked' : ''} disabled> </div>`;
                     cell.html(checkboxHtml);
@@ -217,7 +234,6 @@ $(document).ready(function () {
             }
         });
 
-        // Volta a mostrar os botões "Deletar" e "Editar"
         row.find('.btnDeletar').css({ display: 'inline' });
         row.find('.btnEditar').css({ display: 'inline' });
         row.find('.btnConfirmar').addClass("d-none");

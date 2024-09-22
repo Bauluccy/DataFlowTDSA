@@ -72,8 +72,8 @@ namespace DataFlow_TDSA
                         switch (i)
                         {
                             case 0:
-                                td.ID = $"Cliente{cliente.CLI_ID}";
                                 td.InnerText = cliente.CLI_ID.ToString();
+                                td.Attributes["class"] = "textID";
                                 break;
 
                             case 1:
