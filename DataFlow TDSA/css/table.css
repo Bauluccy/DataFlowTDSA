@@ -1,0 +1,12 @@
+﻿#asideInsereCliente {
+    display: none;
+    
+}
+
+#asideInsereCliente section{
+    padding: 1px 0;
+}
+
+.visivel{
+    display: flex !important;
+}
