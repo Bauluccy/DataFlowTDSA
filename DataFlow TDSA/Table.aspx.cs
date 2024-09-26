@@ -112,8 +112,6 @@ namespace DataFlow_TDSA
                     tableClientes.Controls.Add(tr);
                 }
             }
-
-            return listaClientes;
         }
 
         private void CriarBotoes(HtmlGenericControl divBtns, Cliente cliente)
