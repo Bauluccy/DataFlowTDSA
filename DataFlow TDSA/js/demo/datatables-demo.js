@@ -1,24 +1,8 @@
 $(document).ready(function () {
     $('#toggleAtivos').addClass("form-check-input");
 
-    $('#dataTable').DataTable({
-        columnDefs: [
-            {
-                targets: 2,
-                render: function (data, type, row) {
-                    if (type === 'display' || type === 'filter') {
-                        let date = new Date(data);
-                        // Usar UTC para obtener el día, mes y año correctos
-                        let day = String(date.getUTCDate()).padStart(2, '0');
-                        let month = String(date.getUTCMonth() + 1).padStart(2, '0');
-                        let year = date.getUTCFullYear();
-                        return `${day}/${month}/${year}`;
-                    }
-                    return data;
-                }
-            }
-        ]
-    });
+    $('#dataTable').DataTable();
+        
 
     $('.btnEditar').on('click', function () {
         const row = $(this).closest('tr');
@@ -45,33 +29,15 @@ $(document).ready(function () {
     $('.btnDeletar').on('click', function () {
         var row = $(this).closest('tr');
 
-        // Captura o ID do elemento correto
-        var id = row.find('.textID').val() || row.find('td:first').text(); // Assumindo que o ID pode estar na primeira célula
+        var id = row.find('.textID').val() || row.find('td:first').text();
 
-        // Define o ID oculto
         $('#hiddenID').val(id);
     });
 
     Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function (sender, args) {
         $('#dataTable').DataTable().destroy();
-        $('#dataTable').DataTable({
-            columnDefs: [
-                {
-                    targets: 2,
-                    render: function (data, type, row) {
-                        if (type === 'display' || type === 'filter') {
-                            let date = new Date(data);
-                            // Usar UTC para obtener el día, mes y año correctos
-                            let day = String(date.getUTCDate()).padStart(2, '0');
-                            let month = String(date.getUTCMonth() + 1).padStart(2, '0');
-                            let year = date.getUTCFullYear();
-                            return `${day}/${month}/${year}`;
-                        }
-                        return data;
-                    }
-                }
-            ]
-        });
+        $('#dataTable').DataTable();
+          
 
         $('#toggleAtivos').addClass("form-check-input");
 
@@ -102,10 +68,8 @@ $(document).ready(function () {
         $('.btnDeletar').on('click', function () {
             var row = $(this).closest('tr');
 
-            // Captura o ID do elemento correto
-            var id = row.find('.textID').val() || row.find('td:first').text(); // Assumindo que o ID pode estar na primeira célula
+            var id = row.find('.textID').val() || row.find('td:first').text();
 
-            // Define o ID oculto
             $('#hiddenID').val(id);
         });
 
@@ -212,7 +176,6 @@ $(document).ready(function () {
     $('.btnCancelar').on('click', function () {
         const row = $(this).closest('tr');
 
-        // Restaura os textos das células ao seu estado original
         row.find('td').each(function (index) {
             const cell = $(this);
             switch (index) {

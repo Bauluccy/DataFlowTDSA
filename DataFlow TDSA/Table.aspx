@@ -19,7 +19,7 @@
                     <asp:UpdatePanel ID="updatePanel" runat="server" UpdateMode="Conditional">
                         <Triggers>
                             <asp:AsyncPostBackTrigger ControlID="btnConfirmAdd" EventName="ServerClick" />
-                            <asp:AsyncPostBackTrigger ControlID="toggleAtivos" EventName="CheckedChanged" />
+                            <asp:AsyncPostBackTrigger ControlID="ToggleAtivos" EventName="CheckedChanged" />
                         </Triggers>
                         <ContentTemplate>
                             <div class="col-12 p-0">
@@ -27,7 +27,7 @@
                                     <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mt-3 mb-3 btnFormInsereCliente">Adicionar Cliente</button>
                                     <label for="toggleAtivos" class="ml-4 mr-4 mb-0">Mostrar inativos</label>
                                     <div class="form-check form-switch d-flex col-1 align-items-center">
-                                        <asp:CheckBox ID="toggleAtivos" ClientIDMode="Static" runat="server" OnCheckedChanged="toggleAtivos_CheckedChanged" AutoPostBack="true" />
+                                        <asp:CheckBox ID="toggleAtivos" ClientIDMode="Static" runat="server" OnCheckedChanged="ToggleAtivos_CheckedChanged" AutoPostBack="true" />
                                     </div>
                                 </div>
                                 <aside id="asideInsereCliente">

@@ -24,7 +24,7 @@ namespace DataFlow_TDSA
             {
                 CarregaClientes();
             }
-                
+
         }
 
         protected void InserirCliente_Click(object sender, EventArgs e)
@@ -49,12 +49,12 @@ namespace DataFlow_TDSA
         protected void EditarCliente_Click(object sender, EventArgs e)
         {
             Cliente cliente = new Cliente();
-            bool ativo = bool.Parse(hiddenAtivo.Value) == false ? false : true;
+            bool ativo = bool.Parse(hiddenAtivo.Value);
             cliente.EditarCliente(int.Parse(hiddenID.Value), hiddenNome.Value, DateTime.Parse(hiddenData.Value), ativo);
             CarregaClientes();
         }
 
-        private List<Cliente> CarregaClientes()
+        private void CarregaClientes()
         {
             tableClientes.Controls.Clear();
             Cliente controllerCliente = new Cliente();
@@ -65,50 +65,47 @@ namespace DataFlow_TDSA
                 if (cliente.CLI_ATIVO || (toggleAtivos.Checked && !cliente.CLI_ATIVO))
                 {
                     HtmlGenericControl tr = new HtmlGenericControl("tr");
-                    for (int i = 0; i < 5; i++)
+
+                    using (HtmlGenericControl tdID = new HtmlGenericControl("td"))
                     {
-                        HtmlGenericControl td = new HtmlGenericControl("td");
-
-                        switch (i)
-                        {
-                            case 0:
-                                td.InnerText = cliente.CLI_ID.ToString();
-                                td.Attributes["class"] = "textID";
-                                break;
-
-                            case 1:
-                                td.InnerText = cliente.CLI_NOME;
-                                break;
-
-                            case 2:
-                                td.InnerText = cliente.CLI_DATANASCIMENTO.ToString("yyyy-MM-dd");
-                                break;
-
-                            case 3:
-                                HtmlGenericControl div = new HtmlGenericControl("div");
-                                div.Attributes["class"] = "form-check form-switch d-flex justify-content-center";
-
-                                HtmlInputCheckBox check = new HtmlInputCheckBox();
-                                check.Attributes["class"] = "form-check-input";
-                                check.Attributes["disabled"] = "true";
-                                check.Attributes["checked"] = cliente.CLI_ATIVO ? "checked" : null;
-
-                                div.Controls.Add(check);
-                                td.Controls.Add(div);
-                                break;
-
-                            case 4:
-                                HtmlGenericControl divBtns = new HtmlGenericControl("div");
-                                divBtns.Attributes["class"] = "col-3 d-flex justify-content-around";
-
-                                CriarBotoes(divBtns, cliente);
-                                td.Controls.Add(divBtns);
-                                break;
-                        }
-
-                        tr.Controls.Add(td);
+                        tdID.InnerText = cliente.CLI_ID.ToString();
+                        tdID.Attributes["class"] = "textID";
+                        tr.Controls.Add(tdID);
                     }
 
+                    using (HtmlGenericControl tdNome = new HtmlGenericControl("td"))
+                    {
+                        tdNome.InnerText = cliente.CLI_NOME;
+                        tr.Controls.Add(tdNome);
+                    }
+
+                    using (HtmlGenericControl tdData = new HtmlGenericControl("td"))
+                    {
+                        tdData.InnerText = cliente.CLI_DATANASCIMENTO.ToString("dd/MM/yyyy");
+                        tr.Controls.Add(tdData);
+                    }
+
+                    HtmlGenericControl tdAtivo = new HtmlGenericControl("td");
+                    HtmlGenericControl div = new HtmlGenericControl("div");
+                    div.Attributes["class"] = "form-check form-switch d-flex justify-content-center";
+
+                    HtmlInputCheckBox check = new HtmlInputCheckBox();
+                    check.Attributes["class"] = "form-check-input";
+                    check.Attributes["disabled"] = "true";
+                    check.Attributes["checked"] = cliente.CLI_ATIVO ? "checked" : null;
+
+                    div.Controls.Add(check);
+                    tdAtivo.Controls.Add(div);
+                    tr.Controls.Add(tdAtivo);
+
+                    HtmlGenericControl tdBtns = new HtmlGenericControl("td");
+                    HtmlGenericControl divBtns = new HtmlGenericControl("div");
+                    divBtns.Attributes["class"] = "col-3 d-flex justify-content-around";
+
+                    CriarBotoes(divBtns, cliente);
+                    tdBtns.Controls.Add(divBtns);
+
+                    tr.Controls.Add(tdBtns);
                     tableClientes.Controls.Add(tr);
                 }
             }
@@ -152,7 +149,7 @@ namespace DataFlow_TDSA
                 ClientIDMode = ClientIDMode.Static,
                 ID = $"btnCancelar{cliente.CLI_ID}",
                 Text = "Cancelar",
-                Attributes = { ["class"] = "btn btn-danger btn-circle btnSelectRow btnCancelar d-none"},
+                Attributes = { ["class"] = "btn btn-danger btn-circle btnSelectRow btnCancelar d-none" },
             };
             btnCancelar.Attributes["onclick"] = "event.preventDefault();";
             btnCancelar.Controls.Add(new HtmlGenericControl("i") { Attributes = { ["class"] = "fas fa-times" } });
@@ -163,7 +160,7 @@ namespace DataFlow_TDSA
             divBtns.Controls.Add(btnCancelar);
         }
 
-        protected void toggleAtivos_CheckedChanged(object sender, EventArgs e)
+        protected void ToggleAtivos_CheckedChanged(object sender, EventArgs e)
         {
             CarregaClientes();
         }
